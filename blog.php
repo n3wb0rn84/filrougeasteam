@@ -33,15 +33,19 @@
    	$articleNumberByPage = 5;
  	//système de tri par catégories.
  	$articlesArrayFilter = array();
- 	if (isset($_POST['categories']))
+ 	//Tester si des categories ont été séléctionnées. Pour des raisons de sécurité, on vérifie qu'il n'y en pas plus de 4 (les 4 présentes pour le moment).
+ 	if (isset($_POST['categories']) && count($_POST['categories']) < 4)
  	{
  		$categories = $_POST['categories'];
  		$categoriesLength = count($categories);
+ 		//Boucle dans les articles...
 	 	for ($i = 0; $i < $articleNumberTotal; $i++)
 	 	{
+	 		//Boucle dans les catégories séléctionnées...
 	 		for ($j = 0; $j < $categoriesLength; $j++)
 	 		{
-	 			if ($articlesArray[$i]['categorie'.$categories[$j].''] == true)
+	 			//Si l'article fait partie de la catégorie on l'ajoute dans l'array 'articlesArrayFilter' et on sort de la boucle 'catégories'. De plus, pour des raisons de sécurité on vérifie que l'élément de l'array 'catégories' est bien un nombre entier compris entre 1 et 4 (les 4 catégories).
+	 			if ($articlesArray[$i]['categorie'.$categories[$j].''] == true && $categories[$j] >= 1 && $categories[$j] <= 4)
 	 			{
 	 				array_push($articlesArrayFilter, $articlesArray[$i]);
 	 				break;
@@ -51,6 +55,13 @@
 	 	$articleNumberTotal = count($articlesArrayFilter);
 	 	//Si le nombre total d'article sur une page est inférieur au nombre total d'articles alors on fixe le nombre d'articles par page à ce dernier.
 	 	$articleNumberByPage = $articleNumberTotal < $articleNumberByPage ? $articleNumberTotal : $articleNumberByPage;
+	 	//S'il n'y aucun articles suite au tri, c'est qu'il y'a eu erreur ou injection => reinitialisation des données pour afficher la page sans catégories filtrées.
+		/*if ($articleNumberTotal == 0)
+		{
+			$articlesArrayFilter = $articlesArray;
+			$articleNumberTotal = count($articlesArrayFilter);
+		 	$articleNumberByPage = 5;
+		}*/
 	}
 	else
 	{
