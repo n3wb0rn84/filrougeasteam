@@ -39,7 +39,8 @@
  	if (isset($_POST['categories']))
  	{
  		$categories = $_POST['categories'];
-	 	for ($i = 0; $i < $articleNumberTotal; $i++)
+ 		var_dump($categories);
+	 	/*for ($i = 0; $i < $articleNumberTotal; $i++)
 	 	{
 	 		for ($j = 0; $j < count($categories); $j)
 	 		{ 				echo $categories[$j];
@@ -49,7 +50,7 @@
 	 				array_push($articlesArrayFilter, $articlesArray[$i]);
 	 			}
 	 		}
-	 	}
+	 	}*/
 	 }
 
 
