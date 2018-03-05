@@ -30,7 +30,7 @@
         }
         $login = htmlspecialchars($_SESSION['login']);
         $pwd = htmlspecialchars($_SESSION['pwd']);
-        $stayOnPage = false;
+        $sessionOk = false;
 
         //Chargement de la requête préparée.
         $req = $bdd->prepare('SELECT nick, password FROM membres');
@@ -40,11 +40,11 @@
         {
           if ($login == $compare['nick'] && $pwd == $compare['password'])
           {
-            $stayOnPage = true;
+            $sessionOk = true;
           }
         }
-        //Si la varible 'stayOnPage' n'est pas passée à 'true' lors de la vérifiaction précédente, la session est vidée et retour à la page d'authentification.
-        if ($stayOnPage == false)
+        //Si la varible 'sessionOk' n'est pas passée à 'true' lors de la vérifiaction précédente, la session est vidée et retour à la page d'authentification.
+        if ($sessionOk == false)
         {
           $req->closeCursor();
           $req = NULL;
@@ -58,4 +58,5 @@
     {
         header("Location: index.php");
     }
+    //basename(__FILE__);
 ?>

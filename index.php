@@ -2,7 +2,7 @@
 
 //DIVERS CHARGEMENTS!
 
-    //Importer les variables pour la connexion serveur
+    //Importer les données pour la connexion serveur.
     include 'humhum.php';
 	//Chargement de la session.
     session_start();
