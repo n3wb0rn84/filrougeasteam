@@ -39,9 +39,34 @@
  	$cat3 = '';
  	$cat4 = '';
  	//Tester si des categories ont été séléctionnées. Pour des raisons de sécurité, on vérifie qu'il n'y en pas plus de 4 (les 4 présentes pour le moment).
- 	if (isset($_POST['categories']) && count($_POST['categories']) < 4)
+ 	if (isset($_GET['categorie1']) || isset($_GET['categorie2']) || isset($_GET['categorie3']) || isset($_GET['categorie4']))
  	{
- 		$categories = $_POST['categories'];
+ 		$categorie1 = '';
+ 		$categorie2 = '';
+ 		$categorie3 = '';
+ 		$categorie4 = '';
+
+ 		$categories = array();
+ 		if (isset($_GET['categorie1']) && $_GET['categorie1'] == true)
+ 		{ 		
+ 			$categorie1 = $_GET['categorie1'];
+	 		array_push($categories, 1);
+ 		}
+ 		if (isset($_GET['categorie2']) && $_GET['categorie2'] == true)
+ 		{
+ 			 $categorie2 = $_GET['categorie2'];
+	 		array_push($categories, 2);
+ 		} 		
+ 		if (isset($_GET['categorie3']) && $_GET['categorie3'] == true)
+ 		{
+ 			$categorie3 = $_GET['categorie3'];
+	 		array_push($categories, 3);
+ 		} 		
+ 		if (isset($_GET['categorie4']) && $_GET['categorie4'] == true)
+ 		{
+ 			$categorie4 = $_GET['categorie4'];
+	 		array_push($categories, 4);
+ 		}
  		$categoriesLength = count($categories);
  		//Pour garder les champs checked dans formulaire après submit. Cet entête de boucle sera executé une seconde fois, quelques lignes plus loin pour filtrer les articles. Cependant vu la nature de cette boucle, elle s'arrête lorsqu'elle trouve la premiere catégorie correspondant à l'article. Même si cet article se situe dans plusieurs de celles-ci. Elle ne pourra donc pas être utilisée pour valider les checkboxs.
 		for ($j = 0; $j < $categoriesLength; $j++)
@@ -134,36 +159,39 @@
 	<div id="main">
 		<a href="index.php?sms=logout">|lougout|</a>
 		<h1>Blog</h1>
-		<form action="blog.php" method="post">
-			<input type="checkbox" name="categories[]" value="1" <?php echo $cat1;?>>
-			<input type="checkbox" name="categories[]" value="2" <?php echo $cat2;?>>
-			<input type="checkbox" name="categories[]" value="3" <?php echo $cat3;?>>
-			<input type="checkbox" name="categories[]" value="4" <?php echo $cat4;?>>
-			<input type="submit" value="valdier">
+		<form action="blog.php" method="get">
+			<input type="checkbox" name="categorie1" <?php echo $cat1;?>>
+			<input type="checkbox" name="categorie2" <?php echo $cat2;?>>
+			<input type="checkbox" name="categorie3" <?php echo $cat3;?>>
+			<input type="checkbox" name="categorie4" <?php echo $cat4;?>>
+			<input type="submit" value="valider">
 		</form>
 		<div class='articles'>
 		<?php
 			$pagePrevious = $pageActuelle == 1 ? $pageNumberMax : $pageActuelle - 1;
 		?>
-			<a class="pagin_arrow" href="blog.php?page=<?=$pagePrevious?>">&#171;</a>
+			<a class="pagin_arrow" href="blog.php?page=<?=$pagePrevious?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>">&#171;</a>
 		<?php
 			for ($i = 0; $i < $pageNumberMax; $i++)
 			{
 				$pageNumberList = $i+1;
 		?>
-				<a class="paginPages" href="blog.php?page=<?=$pageNumberList?>"><?=$pageNumberList?></a>
+				<a class="paginPages" href="blog.php?page=<?=$pageNumberList?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>"><?=$pageNumberList?></a>
 		<?php
 			}
 			$pageNext = $pageActuelle == $pageNumberMax ? 1 : $pageActuelle + 1;
 		?>
-			<a class="pagin_arrow" href="blog.php?page=<?=$pageNext?>">&#187;</a>
+			<a class="pagin_arrow" href="blog.php?page=<?=$pageNext?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>">&#187;</a>
 		<?php
 			for ($i = 0, $j = $articlesOnThisPageFirstIndex; $i < $articleNumberByPage; $i++, $j++)
 	        {
+				if(isset($articlesArrayFilter[$j]))
+				{
 		?>
-				<h2><?php echo $articlesArrayFilter[$j]['titre']; ?><span> | <?php echo $articlesArrayFilter[$j]['date']; ?></span></h2>
-		       	<p><?php echo $articlesArrayFilter[$j]['contenu']; ?></p>
+					<h2><?php echo $articlesArrayFilter[$j]['titre']; ?><span> | <?php echo $articlesArrayFilter[$j]['date']; ?></span></h2>
+			       	<p><?php echo $articlesArrayFilter[$j]['contenu']; ?></p>
 		<?php
+		       }
 			}
 		?>
 		</div>
