@@ -38,33 +38,33 @@
  	$cat2 = '';
  	$cat3 = '';
  	$cat4 = '';
- 	//Tester si des categories ont été séléctionnées. Pour des raisons de sécurité, on vérifie qu'il n'y en pas plus de 4 (les 4 présentes pour le moment).
- 	if (isset($_GET['categorie1']) || isset($_GET['categorie2']) || isset($_GET['categorie3']) || isset($_GET['categorie4']))
- 	{
- 		$categorie1 = '';
- 		$categorie2 = '';
- 		$categorie3 = '';
- 		$categorie4 = '';
+ 	//Tester si des categories ont été séléctionnées.
 
+ 	$categorie1 = htmlspecialchars(isset($_GET['categorie1'])) && htmlspecialchars($_GET['categorie1']) == true ? htmlspecialchars($_GET['categorie1']) : '';
+
+	$categorie2 = htmlspecialchars(isset($_GET['categorie2'])) && htmlspecialchars($_GET['categorie2']) == true ? htmlspecialchars($_GET['categorie2']) : '';
+
+	$categorie3 = htmlspecialchars(isset($_GET['categorie3'])) && htmlspecialchars($_GET['categorie3']) == true ? htmlspecialchars($_GET['categorie3']) : '';
+
+	$categorie4 = htmlspecialchars(isset($_GET['categorie4'])) && htmlspecialchars($_GET['categorie4']) == true ? htmlspecialchars($_GET['categorie4']) : '';
+
+ 	if ($categorie1 != '' || $categorie2 != '' || $categorie3 != '' || $categorie4 != '')
+ 	{
  		$categories = array();
- 		if (isset($_GET['categorie1']) && $_GET['categorie1'] == true)
+ 		if ($categorie1 == true)
  		{ 		
- 			$categorie1 = $_GET['categorie1'];
 	 		array_push($categories, 1);
  		}
- 		if (isset($_GET['categorie2']) && $_GET['categorie2'] == true)
- 		{
- 			 $categorie2 = $_GET['categorie2'];
+ 		if ($categorie2 == true)
+ 		{ 		
 	 		array_push($categories, 2);
  		} 		
- 		if (isset($_GET['categorie3']) && $_GET['categorie3'] == true)
- 		{
- 			$categorie3 = $_GET['categorie3'];
+ 		if ($categorie3 == true)
+ 		{ 		
 	 		array_push($categories, 3);
  		} 		
- 		if (isset($_GET['categorie4']) && $_GET['categorie4'] == true)
- 		{
- 			$categorie4 = $_GET['categorie4'];
+ 		if ($categorie4 == true)
+ 		{ 		
 	 		array_push($categories, 4);
  		}
  		$categoriesLength = count($categories);
@@ -121,10 +121,9 @@
  	$pageNumberMax = ceil($pageNumberMax);
  	$pageNumberRest = $pageNumberMax % $articleNumberByPage;
  	//Récuperer la valeur de la page transmise par l'url.
- 	if (isset($_GET['page']))
+ 	if (htmlspecialchars(isset($_GET['page'])))
  	{
- 		$pageActuelle = $_GET['page'];
- 		$pageActuelle = htmlspecialchars($pageActuelle);
+ 		$pageActuelle = htmlspecialchars($_GET['page']);
  	}
  	else
  	{
@@ -160,9 +159,13 @@
 		<a href="index.php?sms=logout">|lougout|</a>
 		<h1>Blog</h1>
 		<form action="blog.php" method="get">
+			<label for="categorie1">categorie1</label>
 			<input type="checkbox" name="categorie1" <?php echo $cat1;?>>
+			<label for="categorie2">categorie2</label>
 			<input type="checkbox" name="categorie2" <?php echo $cat2;?>>
+			<label for="categorie3">categorie3</label>
 			<input type="checkbox" name="categorie3" <?php echo $cat3;?>>
+			<label for="categorie4">categorie4</label>
 			<input type="checkbox" name="categorie4" <?php echo $cat4;?>>
 			<input type="submit" value="valider">
 		</form>
