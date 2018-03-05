@@ -31,13 +31,37 @@
     $articlesArray = $req->fetchAll();
     $articleNumberTotal = count($articlesArray);
    	$articleNumberByPage = 5;
- 	//système de tri par catégories.
+ 	//Système de tri par catégories.
  	$articlesArrayFilter = array();
+ 	//Variables qui serviront à garder les checkboxs séléctionnées lors du submit.
+ 	$cat1 = '';
+ 	$cat2 = '';
+ 	$cat3 = '';
+ 	$cat4 = '';
  	//Tester si des categories ont été séléctionnées. Pour des raisons de sécurité, on vérifie qu'il n'y en pas plus de 4 (les 4 présentes pour le moment).
  	if (isset($_POST['categories']) && count($_POST['categories']) < 4)
  	{
  		$categories = $_POST['categories'];
  		$categoriesLength = count($categories);
+ 		//Pour garder les champs checked dans formulaire après submit. Cet entête de boucle sera executé une seconde fois, quelques lignes plus loin pour filtrer les articles. Cependant vu la nature de cette boucle, elle s'arrête lorsqu'elle trouve la premiere catégorie correspondant à l'article. Même si cet article se situe dans plusieurs de celles-ci. Elle ne pourra donc pas être utilisée pour valider les checkboxs.
+		for ($j = 0; $j < $categoriesLength; $j++)
+		{
+			switch ($categories[$j])
+		   	{
+		    case "1":
+		        $cat1 = 'checked';
+		        break;
+		    case "2":
+		        $cat2 = 'checked';
+		        break;
+		    case "3":
+		        $cat3 = 'checked';
+		        break;
+		     case "4":
+		        $cat4 = 'checked';
+		        break;
+			}
+		}
  		//Boucle dans les articles...
 	 	for ($i = 0; $i < $articleNumberTotal; $i++)
 	 	{
@@ -111,10 +135,10 @@
 		<a href="index.php?sms=logout">|lougout|</a>
 		<h1>Blog</h1>
 		<form action="blog.php" method="post">
-			<input type="checkbox" name="categories[]" value="1">
-			<input type="checkbox" name="categories[]" value="2">
-			<input type="checkbox" name="categories[]" value="3">
-			<input type="checkbox" name="categories[]" value="4">
+			<input type="checkbox" name="categories[]" value="1" <?php echo $cat1;?>>
+			<input type="checkbox" name="categories[]" value="2" <?php echo $cat2;?>>
+			<input type="checkbox" name="categories[]" value="3" <?php echo $cat3;?>>
+			<input type="checkbox" name="categories[]" value="4" <?php echo $cat4;?>>
 			<input type="submit" value="valdier">
 		</form>
 		<div class='articles'>
