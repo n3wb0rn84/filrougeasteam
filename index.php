@@ -18,10 +18,17 @@
     {
       	die('Erreur : ' . $e->getMessage());
     }
-    //Récupération des messages d'erreur.
-    $sms = $_GET['sms'] ?? '';
-	$sms = htmlspecialchars($sms);
-	//Logout.
+    //Récupération des messages.
+    if (isset($_GET['sms']))
+    {
+      $sms = $_GET['sms'];
+    	$sms = htmlspecialchars($sms);
+    }
+    else
+    {
+      $sms = '';
+    }
+  	//Logout.
     if ($sms == 'logout')
     {
      	$_SESSION = array();

@@ -25,37 +25,51 @@
     //Requête préparée.
     $req = $bdd->prepare('SELECT * FROM articles ORDER BY id_articles DESC');
     $req->execute();
-//SYSTEME DE PAGINATION
-    $articleNumberByPage = 5;
+
+//FILTRES & PAGINATION!
+    //Récuperation des rangées de la table 'articles' dans un array.
     $articlesArray = $req->fetchAll();
     $articleNumberTotal = count($articlesArray);
- 	$pageNumberMax = $articleNumberTotal / $articleNumberByPage;
- 	$pageNumberMax = ceil($pageNumberMax);
- 	$pageNumberRest = $pageNumberMax % $articleNumberByPage;
- 	$pageActuelle = $_GET['page'] ?? 1;
-
+   	$articleNumberByPage = 5;
  	//système de tri par catégories.
  	$articlesArrayFilter = array();
  	if (isset($_POST['categories']))
  	{
  		$categories = $_POST['categories'];
- 		var_dump($categories);
-	 	/*for ($i = 0; $i < $articleNumberTotal; $i++)
+ 		$categoriesLength = count($categories);
+	 	for ($i = 0; $i < $articleNumberTotal; $i++)
 	 	{
-	 		for ($j = 0; $j < count($categories); $j)
-	 		{ 				echo $categories[$j];
-
-	 			if ($articlesArray[$i] == $categories[$j])
+	 		for ($j = 0; $j < $categoriesLength; $j++)
+	 		{
+	 			if ($articlesArray[$i]['categorie'.$categories[$j].''] == true)
 	 			{
 	 				array_push($articlesArrayFilter, $articlesArray[$i]);
+	 				break;
 	 			}
 	 		}
-	 	}*/
-	 }
+	 	}
+	 	$articleNumberTotal = count($articlesArrayFilter);
+	 	//Si le nombre total d'article sur une page est inférieur au nombre total d'articles alors on fixe le nombre d'articles par page à ce dernier.
+	 	$articleNumberByPage = $articleNumberTotal < $articleNumberByPage ? $articleNumberTotal : $articleNumberByPage;
+	}
+	else
+	{
+		$articlesArrayFilter = $articlesArray;
+	}
 
-
-
-
+ 	$pageNumberMax = $articleNumberTotal / $articleNumberByPage;
+ 	$pageNumberMax = ceil($pageNumberMax);
+ 	$pageNumberRest = $pageNumberMax % $articleNumberByPage;
+ 	//Récuperer la valeur de la page transmise par l'url.
+ 	if (isset($_GET['page']))
+ 	{
+ 		$pageActuelle = $_GET['page'];
+ 		$pageActuelle = htmlspecialchars($pageActuelle);
+ 	}
+ 	else
+ 	{
+ 		$pageActuelle = 1;
+ 	}
 	//Si le numero de la page actuelle est plus grand que le nombre de pages ou qu'il ne s'agit pas d'un chiffre...
  	if (!isset($pageActuelle) || $pageActuelle > $pageNumberMax || filter_var($pageActuelle, FILTER_VALIDATE_INT) == false)
  	{
@@ -86,11 +100,10 @@
 		<a href="index.php?sms=logout">|lougout|</a>
 		<h1>Blog</h1>
 		<form action="blog.php" method="post">
-			<input type="checkbox" name="categories[]" value="cat1">
-			<input type="checkbox" name="categories[]" value="cat2">
-			<input type="checkbox" name="categories[]" value="cat3">
-			<input type="checkbox" name="categories[]" value="cat4">
-			<input type="checkbox" name="categories[]" value="cat5">
+			<input type="checkbox" name="categories[]" value="1">
+			<input type="checkbox" name="categories[]" value="2">
+			<input type="checkbox" name="categories[]" value="3">
+			<input type="checkbox" name="categories[]" value="4">
 			<input type="submit" value="valdier">
 		</form>
 		<div class='articles'>
@@ -113,8 +126,8 @@
 			for ($i = 0, $j = $articlesOnThisPageFirstIndex; $i < $articleNumberByPage; $i++, $j++)
 	        {
 		?>
-				<h2><?php echo $articlesArray[$j]['titre']; ?><span> | <?php echo $articlesArray[$j]['date']; ?></span></h2>
-		       	<p><?php echo $articlesArray[$j]['contenu']; ?></p>
+				<h2><?php echo $articlesArrayFilter[$j]['titre']; ?><span> | <?php echo $articlesArrayFilter[$j]['date']; ?></span></h2>
+		       	<p><?php echo $articlesArrayFilter[$j]['contenu']; ?></p>
 		<?php
 			}
 		?>
