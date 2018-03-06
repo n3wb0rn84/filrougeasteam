@@ -39,9 +39,9 @@
 
 	$categorie4 = htmlspecialchars(isset($_GET['categorie4'])) && htmlspecialchars($_GET['categorie4']) == true ? htmlspecialchars($_GET['categorie4']) : '';
 
-	$categorie5 = htmlspecialchars(isset($_GET['catbyand'])) && htmlspecialchars($_GET['catbyand']) == true ? htmlspecialchars($_GET['catbyand']) : '';
+	$categorie5 = htmlspecialchars(isset($_GET['catandor'])) && htmlspecialchars($_GET['catandor']) == 'catbyand' ? true : '';
 
-	$categorie6 = htmlspecialchars(isset($_GET['catbyor'])) && htmlspecialchars($_GET['catbyor']) == true ? htmlspecialchars($_GET['catbyor']) : '';
+	$categorie6 = htmlspecialchars(isset($_GET['catandor'])) && htmlspecialchars($_GET['catandor']) == 'catbyor' ? true : '';
 	//Tester s'il existe au moins une categorie séléctionnée.
  	if ($categorie1 != '' || $categorie2 != '' || $categorie3 != '' || $categorie4 != '')
  	{
@@ -62,11 +62,11 @@
  		{ 		
 	 		array_push($categories, 4);
  		}
- 		if ($catbyand == true)
+ 		if ($categorie5 == true)
  		{ 		
 	 		array_push($categories, 5);
  		}
- 		if ($catbyor == true)
+ 		if ($categorie6 == true)
  		{ 		
 	 		array_push($categories, 6);
  		}
@@ -97,20 +97,40 @@
 			}
 		}
 		//Requête préparée.
-	    $req = $bdd->prepare('
-	    	SELECT * 
-	    	FROM articles
-	    	INNER JOIN relations
-	    	ON relations.id_articles = articles.id_articles
-	    	WHERE
-			 	relations.categorie1 = :cat1 AND relations.categorie1 = 1
-			OR
-				relations.categorie2 = :cat2 AND relations.categorie2 = 1
-			OR
-				relations.categorie3 = :cat3 AND relations.categorie3 = 1
-			OR
-				relations.categorie4 = :cat4 AND relations.categorie4 = 1
-	    	ORDER BY articles.id_articles DESC');
+		if ($catbyor == 'checked')
+		{
+		    $req = $bdd->prepare('
+		    	SELECT * 
+		    	FROM articles
+		    	INNER JOIN relations
+		    	ON relations.id_articles = articles.id_articles
+		    	WHERE
+				 	relations.categorie1 = :cat1 AND relations.categorie1 = 1
+				OR
+					relations.categorie2 = :cat2 AND relations.categorie2 = 1
+				OR
+					relations.categorie3 = :cat3 AND relations.categorie3 = 1
+				OR
+					relations.categorie4 = :cat4 AND relations.categorie4 = 1
+		    	ORDER BY articles.id_articles DESC');
+		}
+		else
+		{
+			$req = $bdd->prepare('
+		    	SELECT * 
+		    	FROM articles
+		    	INNER JOIN relations
+		    	ON relations.id_articles = articles.id_articles
+		    	WHERE
+				 	relations.categorie1 = :cat1
+				AND
+					relations.categorie2 = :cat2
+				AND
+					relations.categorie3 = :cat3
+				AND
+					relations.categorie4 = :cat4
+		    	ORDER BY articles.id_articles DESC');	
+		}
 	    $req->bindParam(':cat1', $categorie1, PDO::PARAM_BOOL);
 	   	$req->bindParam(':cat2', $categorie2, PDO::PARAM_BOOL);
 	   	$req->bindParam(':cat3', $categorie3, PDO::PARAM_BOOL);
@@ -146,7 +166,7 @@
 		$articleNumberTotal = count($articlesArrayFilter);
 	 	$articleNumberByPage = 5;
 	}*/
- 	$pageNumberMax = $articleNumberTotal / $articleNumberByPage;
+ 	$pageNumberMax = $articleNumberByPage > 0 && $articleNumberTotal > 0? $articleNumberTotal / $articleNumberByPage : 1;
  	$pageNumberMax = ceil($pageNumberMax);
  	//Récuperer la valeur de la page transmise par l'url.
  	if (htmlspecialchars(isset($_GET['page'])))
@@ -200,9 +220,9 @@
 			<label for="categorie4"> | categorie4</label>
 			<input type="checkbox" name="categorie4" <?php echo $catCheck4;?>>
 			<label for="catbyand"> | AND</label>
-			<input type="radio" name="catandor" <?php echo $catbyand;?>>
+			<input type="radio" name="catandor" value="catbyand" <?php echo $catbyand;?>>
 			<label for="catbyor"> | OR</label>
-			<input type="radio" name="catandor" <?php echo $catbyor;?>>
+			<input type="radio" name="catandor" value="catbyor" <?php echo $catbyor;?>>
 			<input type="submit" value="valider">
 		</form>
 		<div class='articles'>
