@@ -90,9 +90,11 @@
 		        break;
 		    case "5":
 		        $catbyand = 'checked';
+		        $catandor = 'catbyand';
 		        break;
 		     case "6":
 		        $catbyor = 'checked';
+		        $catandor = 'catbyor';
 		        break;
 			}
 		}
@@ -129,7 +131,8 @@
 					relations.categorie3 = :cat3
 				AND
 					relations.categorie4 = :cat4
-		    	ORDER BY articles.id_articles DESC');	
+		    	ORDER BY articles.id_articles DESC');
+		    	$catbyand = 'checked';	
 		}
 	    $req->bindParam(':cat1', $categorie1, PDO::PARAM_BOOL);
 	   	$req->bindParam(':cat2', $categorie2, PDO::PARAM_BOOL);
@@ -141,8 +144,6 @@
         $req = NULL;
        	//Récuperation des rangées de la table 'articles' dans un array.
 	 	//$articlesArray = $req->fetchAll();
-	    $articleNumberTotal = count($articlesArray);
-	   	$articleNumberByPage = 5;
 	}
 	//Sinon, on charge tous les articles.
 	else
@@ -157,6 +158,7 @@
         $req = NULL;
 	}
  	$articleNumberTotal = count($articlesArray);
+ 	$articleNumberByPage = 5;
  	//Si le nombre total d'article sur une page est inférieur au nombre total d'articles alors on fixe le nombre d'articles par page à ce dernier.
  	$articleNumberByPage = $articleNumberTotal < $articleNumberByPage ? $articleNumberTotal : $articleNumberByPage;
  	//S'il n'y aucun articles suite au tri, c'est qu'il y'a eu erreur ou injection => reinitialisation des données pour afficher la page sans catégories filtrées.
@@ -166,7 +168,7 @@
 		$articleNumberTotal = count($articlesArrayFilter);
 	 	$articleNumberByPage = 5;
 	}*/
- 	$pageNumberMax = $articleNumberByPage > 0 && $articleNumberTotal > 0? $articleNumberTotal / $articleNumberByPage : 1;
+ 	$pageNumberMax = $articleNumberByPage > 0 && $articleNumberTotal > 0 ? $articleNumberTotal / $articleNumberByPage : 1;
  	$pageNumberMax = ceil($pageNumberMax);
  	//Récuperer la valeur de la page transmise par l'url.
  	if (htmlspecialchars(isset($_GET['page'])))
@@ -192,10 +194,6 @@
  	$articlesOnThisPageFirstIndex = $articleNumberByPage * ($pageActuelle - 1);
  	//Changement du nombre d'articles à afficher si on se trouve sur la dernière page.
  	/*$articleNumberByPage = $pageActuelle == $pageNumberMax ? ($articleNumberByPage - $pageNumberRest) : $articleNumberByPage;*/
- 	if (!isset($pageNumberMax) || $pageNumberMax > 20)
- 	{
- 		$pageNumberMax = 1;
- 	}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -229,18 +227,18 @@
 		<?php
 			$pagePrevious = $pageActuelle == 1 ? $pageNumberMax : $pageActuelle - 1;
 		?>
-			<a class="pagin_arrow" href="blog.php?page=<?=$pagePrevious?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>">&#171;</a>
+			<a class="pagin_arrow" href="blog.php?page=<?=$pagePrevious?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>&catandor=<?=$catandor?>">&#171;</a>
 		<?php
 			for ($i = 0; $i < $pageNumberMax; $i++)
 			{
 				$pageNumberList = $i+1;
 		?>
-				<a class="paginPages" href="blog.php?page=<?=$pageNumberList?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>"><?=$pageNumberList?></a>
+				<a class="paginPages" href="blog.php?page=<?=$pageNumberList?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>&catandor=<?=$catandor?>"><?=$pageNumberList?></a>
 		<?php
 			}
 			$pageNext = $pageActuelle == $pageNumberMax ? 1 : $pageActuelle + 1;
 		?>
-			<a class="pagin_arrow" href="blog.php?page=<?=$pageNext?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>">&#187;</a>
+			<a class="pagin_arrow" href="blog.php?page=<?=$pageNext?>&categorie1=<?=$categorie1?>&categorie2=<?=$categorie2?>&categorie3=<?=$categorie3?>&categorie4=<?=$categorie4?>&catandor=<?=$catandor?>">&#187;</a>
 		<?php
 			for ($i = 0, $j = $articlesOnThisPageFirstIndex; $i < $articleNumberByPage; $i++, $j++)
 	        {
