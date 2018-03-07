@@ -7,7 +7,7 @@
 }
 
 body{
-  background-image: url('../img/navbg.jpg');
+  background-image: url('https://images.pexels.com/photos/131685/pexels-photo-131685.jpeg?w=940&h=650&auto=compress&cs=tinysrgb');
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -23,7 +23,10 @@ nav li{
 
 nav li a{
   color: #F09200;/*primary links text color*/
-  text-shadow: 1px 1px #45454a;/*txt shadows color*/
+}
+
+nav li a:hover{
+  color: black !important;
 }
 
 .main{
@@ -45,21 +48,22 @@ nav li a{
 
 .blog{
   width: 100% !important;height: 70% !important;
-  color: #F09200;
+  color: white;
   background-color: #45454a;
   overflow-y: scroll;
 }
 
+.blog h2{
+  text-align: center;
+  text-decoration: underline !important;
+  text-transform: uppercase;
+}
+
 .rdv{
   width: 100% !important; height: 25% !important;
-  background-image: url(../img/ressourcerie.jpg);
-  background-color: #45454a;
-  background-repeat: no-repeat;
-  background-clip: border-box;
-  background-size: contain;
-  background-position: center;
-  color: #F09200;
-  text-shadow: 1px 1px #45454a;
+  background-color: #F09200;
+  color: white;
+  text-align: center;
 }
 
 .liens a{
