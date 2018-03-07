@@ -1,0 +1,67 @@
+*{
+  padding:0;margin: 0;
+  box-sizing: border-box;
+  list-style-type: none;
+  text-decoration: none !important;
+  border: none !important;
+}
+
+body{
+  background-image: url('../img/navbg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+header{
+  background-color: white; /*primary color for header*/
+}
+
+nav li{
+  text-align: center;
+}
+
+nav li a{
+  color: #F09200;/*primary links text color*/
+  text-shadow: 1px 1px #45454a;/*txt shadows color*/
+}
+
+.main{
+  width: 99vw !important;
+  height: 80vh !important;
+}
+
+.contenu{
+  background-color: white;
+  overflow-y: scroll !important;
+  width: 75vw !important;
+  height: 100% !important;
+}
+
+.aside{
+  width: 24vw !important;
+  height: 100% !important;
+}
+
+.blog{
+  width: 100% !important;height: 70% !important;
+  color: #F09200;
+  background-color: #45454a;
+  overflow-y: scroll;
+}
+
+.rdv{
+  width: 100% !important; height: 25% !important;
+  background-image: url(../img/ressourcerie.jpg);
+  background-color: #45454a;
+  background-repeat: no-repeat;
+  background-clip: border-box;
+  background-size: contain;
+  background-position: center;
+  color: #F09200;
+  text-shadow: 1px 1px #45454a;
+}
+
+.liens a{
+  color: #F09200;
+}
